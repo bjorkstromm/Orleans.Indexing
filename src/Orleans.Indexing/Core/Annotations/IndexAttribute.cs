@@ -4,7 +4,7 @@ namespace Orleans.Indexing
 {
     /// <summary>
     /// The generic attribute for declaring the property fields of an indexed grain interface to have an index.
-    /// 
+    ///
     /// This property should only be used for the index-types introduced by third-party libraries.
     /// Otherwise, we suggest to use one of the following descendants of the IndexAttribute based on your requirements:
     ///  - ActiveIndexAttribute
@@ -21,7 +21,7 @@ namespace Orleans.Indexing
 
         // For non-nullable types this is the value to represent 'null' (unset), so new grains don't try to write
         // the default value (0); this causes a uniqueness violation for Unique indexes.
-        public string NullValue { get; set; }
+        public string? NullValue { get; set; }
 
         /// <summary>
         /// The default constructor for Index.

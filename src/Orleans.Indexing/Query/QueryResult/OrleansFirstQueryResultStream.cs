@@ -12,6 +12,7 @@ namespace Orleans.Indexing
     /// </summary>
     /// <typeparam name="TIGrain">type of grain for query result</typeparam>
     [Serializable]
+    [GenerateSerializer]
     public class OrleansFirstQueryResultStream<TIGrain> : OrleansQueryResultStream<TIGrain> where TIGrain : IIndexableGrain
     {
         public OrleansFirstQueryResultStream() : this(CreateNewStream())
@@ -26,7 +27,7 @@ namespace Orleans.Indexing
         // Creates a temporary new stream for the query result, when a stream is not provided from caller
         private static IAsyncStream<TIGrain> CreateNewStream() => throw new NotImplementedException();
 
-        public override async Task OnNextAsync(TIGrain item, StreamSequenceToken token = null)
+        public override async Task OnNextAsync(TIGrain item, StreamSequenceToken? token = null)
         {
             await this._stream.OnNextAsync(item, token);
             await this._stream.OnCompletedAsync();

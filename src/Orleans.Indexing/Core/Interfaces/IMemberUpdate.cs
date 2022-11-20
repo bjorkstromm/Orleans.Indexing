@@ -9,13 +9,13 @@ namespace Orleans.Indexing
         /// Returns the before-image of the grain, before applying this update
         /// </summary>
         /// <returns>the before-image of the grain, before applying this update</returns>
-        object GetBeforeImage();
+        object? GetBeforeImage();
 
         /// <summary>
         /// Produces the after-image of the grain, after applying this update
         /// </summary>
         /// <returns>the after-image of the grain, after applying this update</returns>
-        object GetAfterImage();
+        object? GetAfterImage();
 
         /// <summary>
         /// Determines the type of operation done, which can be:

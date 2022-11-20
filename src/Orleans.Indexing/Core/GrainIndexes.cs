@@ -28,7 +28,7 @@ namespace Orleans.Indexing
             this.interfaceToIndexMap = indexedInterfaceTypes.ToDictionary(itf => itf, itf => new InterfaceIndexes(registry[itf]));
         }
 
-        internal static bool CreateInstance(IndexRegistry registry, Type grainType, out GrainIndexes grainIndexes)
+        internal static bool CreateInstance(IndexRegistry registry, Type grainType, out GrainIndexes? grainIndexes)
         {
             grainIndexes = registry.TryGetGrainIndexedInterfaces(grainType, out Type[] indexedInterfaces)
                             ? new GrainIndexes(registry, indexedInterfaces, registry.GetNullPropertyValuesForGrain(grainType))
@@ -47,12 +47,12 @@ namespace Orleans.Indexing
             {
                 var tProperties = indexes.PropertiesType;
                 var tGrainState = state.GetType();
-                object mapStateToProperties()
+                object? mapStateToProperties()
                 {
                     // Copy named property values from this.State to indexes.Properties. The set of property names will not change.
                     // Note: TProperties is specified on IIndexableGrain<TProperties> with a "where TProperties: new()" constraint.
                     var properties = indexes.Properties ?? Activator.CreateInstance(tProperties);
-                    tProperties.GetProperties(BindingFlags.Public | BindingFlags.Instance).ForEach(p => p.SetValue(properties, tGrainState.GetProperty(p.Name).GetValue(state)));
+                    tProperties.GetProperties(BindingFlags.Public | BindingFlags.Instance).ForEach(p => p.SetValue(properties, tGrainState.GetProperty(p.Name)?.GetValue(state)));
                     return properties;
                 }
 
@@ -65,7 +65,7 @@ namespace Orleans.Indexing
         /// <summary>
         /// This method checks the list of cached indexes, and if any index does not have a before-image, it will create
         /// one for it. As before-images are stored as an immutable field, a new map is created in this process.
-        /// 
+        ///
         /// This method is called on activation of the grain, and when the UpdateIndexes method detects an inconsistency
         /// between the indexes in the index handler and the cached indexes of the current grain.
         /// </summary>
@@ -77,7 +77,7 @@ namespace Orleans.Indexing
             {
                 var oldBefImgs = indexes.BeforeImages.Value;
 
-                object getImage(string indexName, IIndexUpdateGenerator upGen)
+                object? getImage(string indexName, IIndexUpdateGenerator upGen)
                     => !force && oldBefImgs.ContainsKey(indexName) ? oldBefImgs[indexName] : upGen.ExtractIndexImage(indexes.Properties);
 
                 indexes.BeforeImages = (indexes.NamedIndexes

@@ -2,6 +2,7 @@ using Orleans.Concurrency;
 using Orleans.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orleans.Indexing
@@ -10,15 +11,15 @@ namespace Orleans.Indexing
     internal class ReincarnatedIndexWorkflowQueue : Grain, IIndexWorkflowQueue
     {
         internal static TimeSpan ACTIVE_FOR_A_DAY = TimeSpan.FromDays(1);
-        private IndexWorkflowQueueBase _base;
+        private IndexWorkflowQueueBase? _base;
 
-        internal SiloIndexManager SiloIndexManager => IndexManager.GetSiloIndexManager(ref __siloIndexManager, base.ServiceProvider);
-        private SiloIndexManager __siloIndexManager;
+        internal SiloIndexManager SiloIndexManager => IndexManager.GetSiloIndexManager(ref __siloIndexManager!, base.ServiceProvider);
+        private SiloIndexManager? __siloIndexManager;
 
-        public override Task OnActivateAsync()
+        public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             DelayDeactivation(ACTIVE_FOR_A_DAY);
-            return base.OnActivateAsync();
+            return base.OnActivateAsync(cancellationToken);
         }
 
         public Task Initialize(IIndexWorkflowQueue oldParentGrainService)
@@ -45,18 +46,18 @@ namespace Orleans.Indexing
         }
 
         public Task AddAllToQueue(Immutable<List<IndexWorkflowRecord>> workflowRecords)
-            => _base.AddAllToQueue(workflowRecords);
+            => _base?.AddAllToQueue(workflowRecords) ?? Task.CompletedTask;
 
         public Task AddToQueue(Immutable<IndexWorkflowRecord> workflowRecord)
-            => _base.AddToQueue(workflowRecord);
+            => _base?.AddToQueue(workflowRecord) ?? Task.CompletedTask;
 
         public Task<Immutable<List<IndexWorkflowRecord>>> GetRemainingWorkflowsIn(HashSet<Guid> activeWorkflowsSet)
-            => _base.GetRemainingWorkflowsIn(activeWorkflowsSet);
+            => _base?.GetRemainingWorkflowsIn(activeWorkflowsSet) ?? Task.FromResult(new Immutable<List<IndexWorkflowRecord>>(null!));
 
         public Task<Immutable<IndexWorkflowRecordNode>> GiveMoreWorkflowsOrSetAsIdle()
-            => _base.GiveMoreWorkflowsOrSetAsIdle();
+            => _base?.GiveMoreWorkflowsOrSetAsIdle() ?? Task.FromResult(new Immutable<IndexWorkflowRecordNode>(null!));
 
         public Task RemoveAllFromQueue(Immutable<List<IndexWorkflowRecord>> workflowRecords)
-            => _base.RemoveAllFromQueue(workflowRecords);
+            => _base?.RemoveAllFromQueue(workflowRecords) ?? Task.CompletedTask;
     }
 }

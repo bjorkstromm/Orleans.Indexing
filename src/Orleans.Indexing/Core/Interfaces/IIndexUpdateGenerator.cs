@@ -1,7 +1,7 @@
 ﻿namespace Orleans.Indexing
 {
     /// <summary>
-    /// This interface specifies a method that each index should define for extracting the part of the grain state it is interested in. 
+    /// This interface specifies a method that each index should define for extracting the part of the grain state it is interested in.
     /// The interface also specifies a method creating an update object after an update happens on the indexed grain
     /// </summary>
     public interface IIndexUpdateGenerator
@@ -11,10 +11,10 @@
         /// </summary>
         /// <param name="indexedGrainProperties">the grain from which we want to extract some state to be indexed</param>
         /// <returns>an encapsulation of the part of the grain state that this index is interested in</returns>
-        object ExtractIndexImage(object indexedGrainProperties);
+        object? ExtractIndexImage(object? indexedGrainProperties);
 
         /// <summary>
-        /// Creates an update object after receiving the current state of the grain and an earlier image of the grain 
+        /// Creates an update object after receiving the current state of the grain and an earlier image of the grain
         /// </summary>
         /// <param name="indexedGrainProperties">the properties of the grain from which we want to extract some state to be indexed</param>
         /// <param name="beforeImage">the before-image of the indexedGrain, which was captured earlier via a call to ExtractIndexImage(indexedGrain)</param>
@@ -31,15 +31,15 @@
 
     internal abstract class IIndexUpdateGenerator<K, TProperties> : IIndexUpdateGenerator
     {
-        object IIndexUpdateGenerator.ExtractIndexImage(object indexedGrainProperties)
-            => ExtractIndexImage((TProperties)indexedGrainProperties);
+        object? IIndexUpdateGenerator.ExtractIndexImage(object? indexedGrainProperties)
+            => ExtractIndexImage((TProperties?)indexedGrainProperties);
 
         /// <summary>
         /// This method is the typed version of ExtractIndexImage
         /// </summary>
         /// <param name="indexedGrainProperties">the grain from which we want to extract some state to be indexed</param>
         /// <returns>an encapsulation of the part of the grain state that this index is interested in</returns>
-        abstract public K ExtractIndexImage(TProperties indexedGrainProperties);
+        abstract public K ExtractIndexImage(TProperties? indexedGrainProperties);
 
         IMemberUpdate IIndexUpdateGenerator.CreateMemberUpdate(object indexedGrainProperties, object beforeImage)
             => CreateMemberUpdate((TProperties)indexedGrainProperties, (K)beforeImage);

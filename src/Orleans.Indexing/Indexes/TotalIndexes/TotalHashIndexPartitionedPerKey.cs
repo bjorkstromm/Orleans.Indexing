@@ -10,6 +10,7 @@ namespace Orleans.Indexing
     /// <typeparam name="V">type of grain interface that is being indexed</typeparam>
     [Serializable]
     [TransactionalIndexVariant(typeof(TotalHashIndexPartitionedPerKeyTransactional<,>))]
+    [GenerateSerializer]
     public class TotalHashIndexPartitionedPerKey<K, V> : HashIndexPartitionedPerKey<K, V, ITotalHashIndexPartitionedPerKeyBucket<K, V>>,
                                                          ITotalIndex where V : class, IIndexableGrain
     {
@@ -20,6 +21,7 @@ namespace Orleans.Indexing
     }
 
     [Serializable]
+    [GenerateSerializer]
     public class TotalHashIndexPartitionedPerKeyTransactional<K, V> : HashIndexPartitionedPerKey<K, V, ITotalHashIndexPartitionedPerKeyBucketTransactional<K, V>>,
                                                                       ITotalIndex where V : class, IIndexableGrain
     {

@@ -14,7 +14,7 @@ namespace Orleans.Indexing
         /// Accepts a linked list of workflow records to handle until reaching a punctuation
         /// </summary>
         /// <param name="workflowRecordsHead">the head of workflow record linked-list</param>
-        Task HandleWorkflowsUntilPunctuation(Immutable<IndexWorkflowRecordNode> workflowRecordsHead);
+        Task HandleWorkflowsUntilPunctuation(Immutable<IndexWorkflowRecordNode?> workflowRecordsHead);
 
         /// <summary>
         /// This method is called for initializing the ReincarnatedIndexWorkflowQueueHandler

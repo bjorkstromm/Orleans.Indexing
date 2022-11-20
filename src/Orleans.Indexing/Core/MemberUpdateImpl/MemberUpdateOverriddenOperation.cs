@@ -7,8 +7,10 @@ namespace Orleans.Indexing
     /// the actual operation in the original update
     /// </summary>
     [Serializable]
+    [GenerateSerializer]
     internal class MemberUpdateOverriddenOperation : IMemberUpdate
     {
+        [Id(0)]
         private IMemberUpdate _update;
 
         public IndexUpdateMode UpdateMode => _update.UpdateMode;
@@ -18,12 +20,13 @@ namespace Orleans.Indexing
             this._update = update;
             this.OperationType = opType;
         }
-        public object GetBeforeImage()
+        public object? GetBeforeImage()
             => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Delete) ? this._update.GetBeforeImage() : null;
 
-        public object GetAfterImage()
+        public object? GetAfterImage()
             => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Insert) ? this._update.GetAfterImage() : null;
 
+        [Id(1)]
         public IndexOperationType OperationType { get; }
 
         public override string ToString() => MemberUpdate.ToString(this);

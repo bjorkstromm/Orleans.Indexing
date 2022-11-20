@@ -8,7 +8,7 @@ namespace Orleans.Indexing
     internal class InterfaceIndexes
     {
         internal NamedIndexMap NamedIndexes { get; }
-        internal object Properties { get; set; }
+        internal object? Properties { get; set; }
         internal Type PropertiesType => this.NamedIndexes.PropertiesClassType;
 
         /// <summary>

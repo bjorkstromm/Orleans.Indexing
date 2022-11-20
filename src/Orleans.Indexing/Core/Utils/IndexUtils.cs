@@ -88,7 +88,7 @@ namespace Orleans.Indexing
 
         internal static bool IsNullable(this Type type) => !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
 
-        internal static object GetNullValue(PropertyInfo propInfo)
+        internal static object? GetNullValue(PropertyInfo propInfo)
         {
             if (propInfo.PropertyType.IsNullable())
             {
@@ -127,7 +127,7 @@ namespace Orleans.Indexing
 
         internal static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> creatorFunc)
         {
-            if (!dict.TryGetValue(key, out TValue value))
+            if (!dict.TryGetValue(key, out TValue? value))
             {
                 value = creatorFunc();
                 dict[key] = value;

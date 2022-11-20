@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 namespace Orleans.Indexing
 {
@@ -9,16 +10,20 @@ namespace Orleans.Indexing
     /// </summary>
     /// <typeparam name="TIGrain">type of grain for query result</typeparam>
     [Serializable]
+    [GenerateSerializer]
     public class OrleansQueryResult<TIGrain> : IOrleansQueryResult<TIGrain> where TIGrain : IIndexableGrain
     {
-        protected IEnumerable<TIGrain> _results;
+        [Id(0)]
+        protected IEnumerable<TIGrain>? _results;
 
         public OrleansQueryResult(IEnumerable<TIGrain> results) => this._results = results;
 
         public void Dispose() => this._results = null;
 
-        public IEnumerator<TIGrain> GetEnumerator() => this._results.GetEnumerator();
+        public IEnumerator<TIGrain> GetEnumerator() => this._results?.GetEnumerator()
+                                                       ?? Enumerable.Empty<TIGrain>().GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => this._results.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this._results?.GetEnumerator()
+                                                   ?? Enumerable.Empty<TIGrain>().GetEnumerator();
     }
 }

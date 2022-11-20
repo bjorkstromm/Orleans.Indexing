@@ -7,18 +7,21 @@ namespace Orleans.Indexing
     /// <summary>
     /// MemberUpdate is a generic implementation of IMemberUpdate that relies on a copy of beforeImage and afterImage, without
     /// keeping any semantic information about the actual change that happened.
-    /// 
+    ///
     /// This class assumes that befImg and aftImg passed to it won't be altered later on, so they are immutable.
     /// </summary>
     [Serializable]
+    [GenerateSerializer]
     internal class MemberUpdate : IMemberUpdate
     {
-        private object _befImg;
-        private object _aftImg;
+        [Id(0)]
+        private object? _befImg;
+        [Id(1)]
+        private object? _aftImg;
 
         public IndexUpdateMode UpdateMode => IndexUpdateMode.NonTentative;
 
-        public MemberUpdate(object befImg, object aftImg, IndexOperationType opType)
+        public MemberUpdate(object? befImg, object? aftImg, IndexOperationType opType)
         {
             this.OperationType = opType;
             if (opType == IndexOperationType.Update || opType == IndexOperationType.Delete)
@@ -31,11 +34,11 @@ namespace Orleans.Indexing
             }
         }
 
-        public MemberUpdate(object befImg, object aftImg) : this(befImg, aftImg, GetOperationType(befImg, aftImg))
+        public MemberUpdate(object? befImg, object? aftImg) : this(befImg, aftImg, GetOperationType(befImg, aftImg))
         {
         }
 
-        private static IndexOperationType GetOperationType(object befImg, object aftImg)
+        private static IndexOperationType GetOperationType(object? befImg, object? aftImg)
         {
             if (befImg == null)
             {
@@ -50,10 +53,11 @@ namespace Orleans.Indexing
         /// Exposes the stored before-image.
         /// </summary>
         /// <returns>the before-image of the indexed attribute(s) that is before applying the current update</returns>
-        public object GetBeforeImage() => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Delete) ? this._befImg : null;
+        public object? GetBeforeImage() => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Delete) ? this._befImg : null;
 
-        public object GetAfterImage() => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Insert) ? this._aftImg : null;
+        public object? GetAfterImage() => (this.OperationType == IndexOperationType.Update || this.OperationType == IndexOperationType.Insert) ? this._aftImg : null;
 
+        [Id(2)]
         public IndexOperationType OperationType { get; }
 
         public override string ToString() => ToString(this);

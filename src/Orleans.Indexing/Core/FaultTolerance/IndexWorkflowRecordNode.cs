@@ -6,16 +6,19 @@ namespace Orleans.Indexing
 {
     /// <summary>
     /// A node in the linked list of workflowRecords.
-    /// 
+    ///
     /// This linked list makes the traversal more efficient.
     /// </summary>
     [Serializable]
+    [GenerateSerializer]
     internal class IndexWorkflowRecordNode
     {
-        internal IndexWorkflowRecord WorkflowRecord;
-
-        internal IndexWorkflowRecordNode Prev = null;
-        internal IndexWorkflowRecordNode Next = null;
+        [Id(0)]
+        internal IndexWorkflowRecord? WorkflowRecord;
+        [Id(1)]
+        internal IndexWorkflowRecordNode? Prev = null;
+        [Id(2)]
+        internal IndexWorkflowRecordNode? Next = null;
 
         /// <summary>
         /// This constructor creates a punctuation node
@@ -24,7 +27,7 @@ namespace Orleans.Indexing
         {
         }
 
-        public IndexWorkflowRecordNode(IndexWorkflowRecord workflow)
+        public IndexWorkflowRecordNode(IndexWorkflowRecord? workflow)
         {
             WorkflowRecord = workflow;
         }
@@ -56,7 +59,7 @@ namespace Orleans.Indexing
             return punctuation;
         }
 
-        public void Remove(ref IndexWorkflowRecordNode head, ref IndexWorkflowRecordNode tail)
+        public void Remove(ref IndexWorkflowRecordNode? head, ref IndexWorkflowRecordNode? tail)
         {
             if (Prev == null) head = Next;
             else Prev.Next = Next;
@@ -81,11 +84,11 @@ namespace Orleans.Indexing
         {
             int count = 0;
             var res = new StringBuilder();
-            IndexWorkflowRecordNode curr = this;
+            IndexWorkflowRecordNode? curr = this;
             do
             {
                 ++count;
-                res.Append(curr.IsPunctuation ? "::Punc::" : curr.WorkflowRecord.ToString()).Append(",\n");
+                res.Append(curr.IsPunctuation ? "::Punc::" : curr.WorkflowRecord?.ToString()).Append(",\n");
                 curr = curr.Next;
             } while (curr != null);
             res.Append("Number of elements: ").Append(count);
@@ -96,11 +99,11 @@ namespace Orleans.Indexing
         {
             int count = 0;
             var res = new StringBuilder();
-            IndexWorkflowRecordNode curr = this;
+            IndexWorkflowRecordNode? curr = this;
             do
             {
                 ++count;
-                res.Append(curr.IsPunctuation ? "::Punc::" : curr.WorkflowRecord.ToString()).Append(",\n");
+                res.Append(curr.IsPunctuation ? "::Punc::" : curr.WorkflowRecord?.ToString()).Append(",\n");
                 curr = curr.Prev;
             } while (curr != null);
             res.Append("Number of elements: ").Append(count);

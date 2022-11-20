@@ -8,18 +8,21 @@ namespace Orleans.Indexing.Facet
     /// </summary>
     /// <typeparam name="TGrainState">the type of user state</typeparam>
     [Serializable]
+    [GenerateSerializer]
     public class IndexedGrainStateWrapper<TGrainState>
         where TGrainState: new()
     {
         /// <summary>
         /// Indicates whether the grain was read from storage (used on startup to set null values).
         /// </summary>
-        public bool AreNullValuesInitialized;
+        [Id(0)]
+        public bool AreNullValuesInitialized { get; set; }
 
         /// <summary>
         /// The actual user state.
         /// </summary>
-        public TGrainState UserState = (TGrainState)Activator.CreateInstance(typeof(TGrainState));
+        [Id(1)]
+        public TGrainState? UserState { get; set; } = (TGrainState?)Activator.CreateInstance(typeof(TGrainState));
 
         internal void EnsureNullValues(IReadOnlyDictionary<string, object> propertyNullValues)
         {

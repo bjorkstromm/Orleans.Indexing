@@ -1,5 +1,6 @@
 using Orleans.Concurrency;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Orleans.Indexing
@@ -7,15 +8,15 @@ namespace Orleans.Indexing
     [Reentrant]
     internal class ReincarnatedIndexWorkflowQueueHandler : Grain, IIndexWorkflowQueueHandler
     {
-        private IIndexWorkflowQueueHandler _base;
+        private IIndexWorkflowQueueHandler? _base;
 
-        internal SiloIndexManager SiloIndexManager => IndexManager.GetSiloIndexManager(ref __siloIndexManager, base.ServiceProvider);
-        private SiloIndexManager __siloIndexManager;
+        internal SiloIndexManager SiloIndexManager => IndexManager.GetSiloIndexManager(ref __siloIndexManager!, base.ServiceProvider);
+        private SiloIndexManager? __siloIndexManager;
 
-        public override Task OnActivateAsync()
+        public override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             DelayDeactivation(ReincarnatedIndexWorkflowQueue.ACTIVE_FOR_A_DAY);
-            return base.OnActivateAsync();
+            return base.OnActivateAsync(cancellationToken);
         }
 
         public Task Initialize(IIndexWorkflowQueue oldParentGrainService)
@@ -41,7 +42,7 @@ namespace Orleans.Indexing
             return Task.CompletedTask;
         }
 
-        public Task HandleWorkflowsUntilPunctuation(Immutable<IndexWorkflowRecordNode> workflowRecordsHead)
-            => _base.HandleWorkflowsUntilPunctuation(workflowRecordsHead);
+        public Task HandleWorkflowsUntilPunctuation(Immutable<IndexWorkflowRecordNode?> workflowRecordsHead)
+            => _base?.HandleWorkflowsUntilPunctuation(workflowRecordsHead) ?? Task.CompletedTask;
     }
 }

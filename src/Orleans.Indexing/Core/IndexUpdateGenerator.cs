@@ -4,13 +4,16 @@ using System.Reflection;
 namespace Orleans.Indexing
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [Serializable]
+    [GenerateSerializer]
     internal class IndexUpdateGenerator : IIndexUpdateGenerator
     {
+        [Id(0)]
         PropertyInfo prop;
-        object nullValue;
+        [Id(1)]
+        object? nullValue;
 
         public IndexUpdateGenerator(PropertyInfo prop)
         {
@@ -18,19 +21,19 @@ namespace Orleans.Indexing
             this.nullValue = IndexUtils.GetNullValue(prop);
         }
 
-        public IMemberUpdate CreateMemberUpdate(object gProps, object befImg)
+        public IMemberUpdate CreateMemberUpdate(object? gProps, object? befImg)
         {
-            object aftImg = gProps == null ? null : ExtractIndexImage(gProps);
+            object? aftImg = gProps is null ? null : ExtractIndexImage(gProps);
             return new MemberUpdate(befImg, aftImg);
         }
 
         public IMemberUpdate CreateMemberUpdate(object aftImg)
             => new MemberUpdate(null, aftImg);
 
-        public object ExtractIndexImage(object gProps)
+        public object? ExtractIndexImage(object gProps)
         {
             var currentValue = this.prop.GetValue(gProps);
-            return currentValue == null || this.nullValue == null
+            return currentValue is null || this.nullValue is null
                 ? currentValue
                 : (currentValue.Equals(this.nullValue) ? null : currentValue);
         }

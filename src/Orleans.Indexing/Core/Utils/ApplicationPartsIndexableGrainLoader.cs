@@ -5,9 +5,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orleans.ApplicationParts;
-using Orleans.Hosting;
-using Orleans.Runtime;
 
 namespace Orleans.Indexing
 {
@@ -17,11 +14,11 @@ namespace Orleans.Indexing
         private readonly ILogger logger;
 
         private static readonly Type indexAttrType = typeof(IndexAttribute);
-        private static readonly PropertyInfo indexTypeProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IndexType));
-        private static readonly PropertyInfo isEagerProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IsEager));
-        private static readonly PropertyInfo isUniqueProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IsUnique));
-        private static readonly PropertyInfo maxEntriesPerBucketProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.MaxEntriesPerBucket));
-        private static readonly PropertyInfo transactionalVariantProperty = typeof(TransactionalIndexVariantAttribute).GetProperty(nameof(TransactionalIndexVariantAttribute.TransactionalIndexType));
+        private static readonly PropertyInfo indexTypeProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IndexType))!;
+        private static readonly PropertyInfo isEagerProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IsEager))!;
+        private static readonly PropertyInfo isUniqueProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.IsUnique))!;
+        private static readonly PropertyInfo maxEntriesPerBucketProperty = typeof(IndexAttribute).GetProperty(nameof(IndexAttribute.MaxEntriesPerBucket))!;
+        private static readonly PropertyInfo transactionalVariantProperty = typeof(TransactionalIndexVariantAttribute).GetProperty(nameof(TransactionalIndexVariantAttribute.TransactionalIndexType))!;
 
         internal ApplicationPartsIndexableGrainLoader(IndexManager indexManager)
         {
@@ -189,7 +186,7 @@ namespace Orleans.Indexing
 
             foreach (var indexableBaseInterface in indexableBaseInterfaces)
             {
-                // ... and its generic argument is a class (TProperties)... 
+                // ... and its generic argument is a class (TProperties)...
                 var propertiesClassType = indexableBaseInterface.GetGenericArguments()[0];
                 if (propertiesClassType.GetTypeInfo().IsClass)
                 {

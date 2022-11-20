@@ -6,9 +6,12 @@ namespace Orleans.Indexing
     /// The meta data that is stored beside the index
     /// </summary>
     [Serializable]
+    [GenerateSerializer]
     public class IndexMetaData
     {
+        [Id(0)]
         private Type _indexType;
+        [Id(1)]
         private int _maxEntriesPerBucket;
 
         /// <summary>
@@ -30,10 +33,13 @@ namespace Orleans.Indexing
             this._maxEntriesPerBucket = maxEntriesPerBucket;
         }
 
+        [Id(2)]
         internal string IndexName { get; }
 
+        [Id(3)]
         public bool IsUniqueIndex { get; }
 
+        [Id(4)]
         public bool IsEager { get; }
 
         public bool IsChainedBuckets => this._maxEntriesPerBucket > 0;
