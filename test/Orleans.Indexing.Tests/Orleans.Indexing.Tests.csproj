@@ -4,23 +4,20 @@
     <AssemblyName>Orleans.Indexing.Tests</AssemblyName>
     <OrleansBuildTimeCodeGen>true</OrleansBuildTimeCodeGen>
     <TargetFrameworks />
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="$(OrleansVersion)">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(MicrosoftExtensionsLoggingVersion)" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="$(OrleansVersion)" />
     <PackageReference Include="Microsoft.Orleans.TestingHost" Version="$(OrleansVersion)" />
-    <PackageReference Include="Orleans.Persistence.CosmosDB" Version="1.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="$(OrleansVersion)" />
     <PackageReference Include="System.Net.Http" Version="$(SystemNetHttpVersion)" />
     <PackageReference Include="xunit" Version="$(xUnitVersion)" />
     <PackageReference Include="Xunit.SkippableFact" Version="$(XunitSkippableFactVersion)" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="$(DotNetxUnitVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(xUnitVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(xUnitRunnerVisualStudioVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftTestSdkVersion)" />
   </ItemGroup>
 
